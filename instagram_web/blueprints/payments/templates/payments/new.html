@@ -1,0 +1,62 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+  Payment
+{% endblock %}
+
+{% block content %}
+    <!-- includes the Braintree JS client SDK -->
+    <script src="https://js.braintreegateway.com/web/dropin/1.22.1/js/dropin.min.js"></script>
+
+    <!-- includes jQuery -->
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+
+
+<div class="card" style="margin: 12px; border-color: chocolate; background-color: lightgoldenrodyellow;">
+  <h1 class="card-body">Payment</h1>
+</div>
+<hr>
+
+<form id="payment-form" method="post" action="{{ url_for('payments.create', image_id=image_id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div class="jumbotron p-3 m-2">
+        <div id="dropin-wrapper">
+            <div id="checkout-message"></div>
+            <div id="dropin-container"></div>   
+            <input type="hidden" name="payment_method_nonce" id="nonce">
+            <label style="margin-top: 20px;">Amount to donate (RM)</label>
+            <input type="number" name="amount" id="amount">
+            <button id="submit-button" type="submit">Donate!</button>
+        </div>
+    </div>
+</form>
+<script>
+    var button = document.querySelector('#submit-button');
+
+    braintree.dropin.create({
+      authorization: '{{client_token}}',
+      container: '#dropin-container'
+    }, function (createErr, instance) {
+        document.querySelector("#submit-button").addEventListener('click', function (e) {
+        e.preventDefault();
+      instance.requestPaymentMethod(function (requestPaymentMethodErr, payload) {
+        console.log(payload.nonce);
+        var myInput = document.getElementById("amount").value
+        document.getElementById("nonce").value = payload.nonce
+        document.getElementById("payment-form").submit()
+      });
+     });
+    });
+  </script>
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+{% endblock %}

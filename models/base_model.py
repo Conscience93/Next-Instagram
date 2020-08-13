@@ -18,9 +18,23 @@ class BaseModel(pw.Model):
         else:
             return 0
 
+    def save2(self, *args, **kwargs):               # update username
+        self.errors = []
+        self.validate2()
+
+        if len(self.errors) == 0:
+            self.updated_at = datetime.datetime.now()
+            return super(BaseModel, self).save(*args, **kwargs)
+        else:
+            return 0
+
+    def save_url_profile_picture(self, *args, **kwargs):               # update profile picuter url
+        self.updated_at = datetime.datetime.now()
+        return super(BaseModel, self).save(*args, **kwargs)
+        
+
     def validate(self):
-        print(
-            f"Warning validation method not implemented for {str(type(self))}")
+        print("debug2222222222222")
         return True
 
     class Meta:

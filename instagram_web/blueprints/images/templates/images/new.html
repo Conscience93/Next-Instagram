@@ -1,0 +1,42 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+  Images
+{% endblock %}
+
+{% block content %}
+<div class="card" style="margin: 12px; border-color: chocolate; background-color: lightgoldenrodyellow;">
+  <h1 class="card-body">Images for {{ current_user.name }}</h1>
+</div>
+<hr>
+<form style="margin: 15px" action="{{ url_for('images.create') }}" method="POST" enctype="multipart/form-data">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <label for="user_file">Upload Your Picture Here</label>
+    <br>
+    <input type="file" name="image_picture" style="margin-bottom: 10px;">
+    <br>
+    <input type="text" name="image_description">
+    <small class="form-text text-muted" style="margin-bottom: 10px;">do u wanna describe something? type here</small>
+    <button type="submit" style="margin: 10px;">Upload</button>
+</form>
+  <hr>
+  <div class="card" style="margin: 12px; border-color: blueviolet; background-color: lightgoldenrodyellow;"></div>
+    {% for i in current_user.images %}
+      <figure class="figure card-body" style="margin: 10px;">
+          <img src="{{ i.image_url }}" class="figure-img img-fluid rounded" width="100%">
+          <figcaption class="figure-caption text-center">{{ i.image_description }}</figcaption>
+      </figure>
+    {% endfor %}
+  </div>
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+{% endblock %}

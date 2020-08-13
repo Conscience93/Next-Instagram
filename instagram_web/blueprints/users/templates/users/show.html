@@ -1,0 +1,72 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+  User Profile Picture
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_private %}
+<div class="card" style="margin: 12px; border-color: coral; background-color: beige;">
+  <h1 class="card-body">This user is currently set to Private.</h1>
+  <img src="{{ user.url_profile_picture }}" width="200px" height="200px">
+</div>
+{% else %}
+<div class="card" style="margin: 12px; border-color: coral; background-color: beige;">
+  <h2 class="card-body">{{ user.name }}</h2>
+  <h2 class="card-body">{{ user.id }}</h2>
+    {% if user.url_profile_picture %}
+    <img src="{{ user.url_profile_picture }}" width="200px" height="200px">
+    {% else %}
+    <!-- empty atm -->
+    {% endif %}
+{% endif %}
+</div>
+
+<hr> <!-- display user images -->
+{% if user.images %}
+<div class="card" style="margin: 12px; border-color: blueviolet; background-color: lightgoldenrodyellow;"></div>
+    {% for i in user.images %}
+    <a href="{{ url_for('images.show', id=i.id) }}">
+      <figure class="figure card-body" style="margin: 10px;">
+        <img src="{{ i.image_url }}" class="figure-img img-fluid rounded" width="100%">
+      </figure>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card" style="margin: 12px; background-color: papayawhip;">
+    <h3 class="card-body">NO IMAGE IS POSTED FROM THIS USER YET</h3>
+</div>
+{% endif %}
+
+<hr> <!-- follow and unfollow button -->
+<div class="card" style="margin: 12px; background-color: rgb(245, 241, 235);">
+
+    {% if follower.user_id == user.id and follower.follower_id == current_user.id %}
+      <h3 class="card-body">YOU ARE CURRENTLY FOLLOWING THIS USER!</h3>
+    {% endif %}
+
+    <h4 class="card-body">FOLLOWERS ID: {% for i in list %} {{ i.follower_id }}, {% endfor %}</h4>
+
+    <hr>
+
+    {% if follower.follower_id == current_user.id %}
+    <form action="{{ url_for('users.unfollow', id = user.id) }}" method="post" class="card-body">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <button class="btn btn-danger" style="margin-left: 30px;" width="25%" type="submit">Unfollow</button>
+    </form>
+    {% elif user.id == current_user.id %}
+      <label style="margin: 10px">nope u can't follow yourself</label>
+    {% else %}
+    <form action="{{ url_for('users.follow', id = user.id) }}" method="post" class="card-body">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <button class="btn btn-primary" style="margin-left: 30px;" width="25%" type="submit">Follow</button>
+    </form>
+    {% endif %}
+
+</div>
+{% endblock %}

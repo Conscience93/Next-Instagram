@@ -1,0 +1,56 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+  Edit (something)
+{% endblock %}
+
+{% block content %}
+<div class="card" style="margin: 12px; border-color: coral; background-color: beige;">
+  <h2 class="card-body">Edit {{ current_user.name }}. ID: {{current_user.id}}</h1>
+  <div class="card-body"><img src="{{ current_user.url_profile_picture }}"></div>
+</div>
+<hr>
+  <form style="margin: 15px" action="{{ url_for('users.update') }}" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div class="form-group" style="width: 50%">
+        <label>Edit Username</label>
+        <input type="text" class="form-control" name="username" value="{{ current_user.name }}">
+        <small class="form-text text-muted">New username. Pls come up with unique name. Also, pls at least 4 characters</small>
+    </div>
+    {% if not current_user.is_private %}
+    <div class="form-group" style="width: 50%">
+      <label class="font-weight-bold">You are currently set to public.</label><br>
+      <input type="checkbox" name="private" value="True">
+      <label>Set your Profile to Private?</label>
+    </div>
+    {% else %}
+    <div class="form-group" style="width: 50%">
+      <label>You are currently set to private.</label><br>
+      <input type="checkbox" name="private" value="False">
+      <label>Set your Profile to Public?</label>
+    </div>
+    {% endif %}
+    <div class="form-group" style="width: 50%">
+        <label>Password (coming soon maybe)</label>
+        <input type="text" class="form-control">
+        <small class="form-text text-muted">password</small>
+    </div>
+    <button type="submit" class="btn btn-secondary">Save Changes</button>
+  </form>
+  <hr>
+
+  <form style="margin: 15px" action="{{ url_for('users.upload') }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <label for="user_file">Upload Your Beautiful Profile Picture</label>
+      <input type="file" name="file_profile_picture">
+      <button type="submit">Upload</button>
+  </form>
+  <hr>
+
+  <ul class="list-group">
+  {% for error in errors: %}
+    <li class="list-group-item" style="width: 50%">{{ error }}</li>
+  {% endfor %}
+  </ul>
+
+{% endblock %}

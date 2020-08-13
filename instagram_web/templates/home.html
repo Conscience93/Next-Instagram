@@ -8,5 +8,30 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Homepage</h1>
+<div class="card" style="margin: 12px; border-color: blue">
+  <h1 class="card-body">Homepage</h1>
+  {% if current_user.is_authenticated %}
+  <h2 class="card-body">Hi {{ current_user.name }}</h2>
+  <hr>
+  <a href="/images/new" class="btn btn-outline-info m-4">Upload Something</a>
+  <hr>
+    <h3 class="m-2">AVAILABLE USERS TO VIEW:</h3>
+    {% for user in users %}
+      <div class="m-2"><a href="{{ url_for('users.show', id=user.id) }}">{{ user.id }}: {{ user.name }}</a></div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+
+<hr>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
 {% endblock %}

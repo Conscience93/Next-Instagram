@@ -1,0 +1,28 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+  User Images
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="card" style="margin: 12px; border-color: coral; background-color: beige;">
+  <h2 class="card-body">{{ image.user_id }}, Images id: {{ image.id }}</h2>
+</div>
+<hr>
+<div class="card" style="margin: 12px; border-color: blueviolet; background-color: lightgoldenrodyellow;">
+    <figure class="figure card-body" style="margin: 10px;">
+        <img src="{{ image.image_url }}" class="figure-img img-fluid rounded" width="25%">
+        <figcaption class="figure-caption text-center m-2" style="border: 1px solid grey;">{{ image.image_description }}</figcaption>
+        <a href="{{ url_for('payments.new', image_id=image.id) }}" width="50%"><button class="btn btn-outline-info m-4">Donate</button></a>
+        <hr>
+        <h3>User Donated:</h4>
+        {% for i in image.payment %}
+          <h4>{{ i.sender_id }}: ${{ i.amount }}</h4>
+        {% endfor %}
+    </figure>
+
+</div>
+{% endblock %}
