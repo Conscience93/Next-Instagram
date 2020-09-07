@@ -1,6 +1,7 @@
 # Flask Nextagram Template
 
-version 0.0.1 (alpha)
+- version 0.0.1 (alpha)
+- Integrated with Payment (Sandbox), Uploading Images, User Login and Logout and a simple API.
 
 ## Development
 
